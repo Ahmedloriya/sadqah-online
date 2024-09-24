@@ -1,0 +1,166 @@
+---
+import SingleTicketRow from "./SingleTicketRow.astro";
+---
+
+<button
+  class="mb-4 flex items-center bg-black text-white py-2 px-4 rounded-lg shadow-lg hover:bg-gray-800"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke-width="2"
+    stroke="currentColor"
+    class="w-5 h-5 mr-2"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1h-1l-5.59 7.59a2 2 0 00-.41 1.18V19l-2 2v-4.23a2 2 0 00-.41-1.18L5 7H4a1 1 0 01-1-1V4z"
+    ></path>
+  </svg>
+  <span>Filter</span>
+</button>
+<div class="max-w-full overflow-x-auto bg-white rounded-lg shadow">
+  <div class="filter-container">
+    <h2>Filter by Status</h2>
+    <button class="filter-btn" data-status="all">All</button>
+    <button class="filter-btn" data-status="open">Open</button>
+    <button class="filter-btn" data-status="closed">Closed</button>
+  </div>
+
+  <div class="filter-container">
+    <h2>Filter by Priority</h2>
+    <button class="filter-btn" data-priority="all">All</button>
+    <button class="filter-btn" data-priority="high">High</button>
+    <button class="filter-btn" data-priority="medium">Medium</button>
+    <button class="filter-btn" data-priority="low">Low</button>
+  </div>
+
+  <table class="w-full text-sm text-left">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+      <tr>
+        <th
+          ><input
+            type="checkbox"
+            id="select-all"
+            onclick="toggleSelectAll(this)"
+          /></th
+        >
+        <th>#</th>
+        <th>TICKET ID</th>
+        <th>SUBJECT</th>
+        <th>STATUS</th>
+        <th>PRIORITY</th>
+        <th>CREATED DATE</th>
+        <th>UPDATED DATE</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-status="open" data-priority="high">
+        <td><input type="checkbox" /></td>
+        <td>1</td>
+        <td>TCKT-001</td>
+        <td>Website is down</td>
+        <td>Open</td>
+        <td>High</td>
+        <td>2021-09-01</td>
+        <td>2021-09-01</td>
+      </tr>
+      <tr data-status="closed" data-priority="low">
+        <td><input type="checkbox" /></td>
+        <td>2</td>
+        <td>TCKT-002</td>
+        <td>Need help with payment</td>
+        <td>Closed</td>
+        <td>Low</td>
+        <td>2021-09-01</td>
+        <td>2021-09-01</td>
+      </tr>
+      <tr data-status="open" data-priority="medium">
+        <td><input type="checkbox" /></td>
+        <td>3</td>
+        <td>TCKT-003</td>
+        <td>Can't login to account</td>
+        <td>Open</td>
+        <td>Medium</td>
+        <td>2021-09-01</td>
+        <td>2021-09-01</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="flex items-center justify-between mt-4">
+  <span class="text-sm text-gray-700"> 1-10 of 97 </span>
+  <div class="flex items-center space-x-2">
+    <span class="text-sm text-gray-700">Rows per page:</span>
+    <select class="text-sm border-gray-300 rounded-md">
+      <option>10</option>
+    </select>
+  </div>
+  <div class="flex items-center space-x-2">
+    <button
+      class="px-3 py-1 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100"
+      >&lt;</button
+    >
+    <span class="text-sm text-gray-700">1/10</span>
+    <button
+      class="px-3 py-1 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100"
+      >&gt;</button
+    >
+  </div>
+</div>
+<script is:inline>
+  // Function to toggle all row checkboxes based on the top checkbox
+  function toggleSelectAll(source) {
+    const checkboxes = document.querySelectorAll(".row-checkbox");
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = source.checked;
+    });
+  }
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const statusButtons = document.querySelectorAll("[data-status]");
+    const priorityButtons = document.querySelectorAll("[data-priority]");
+    const tableRows = document.querySelectorAll("tbody tr");
+
+    let currentStatusFilter = "all";
+    let currentPriorityFilter = "all";
+
+    function filterTable() {
+      tableRows.forEach((row) => {
+        const status = row.getAttribute("data-status");
+        const priority = row.getAttribute("data-priority");
+
+        const statusMatch =
+          currentStatusFilter === "all" || currentStatusFilter === status;
+        const priorityMatch =
+          currentPriorityFilter === "all" || currentPriorityFilter === priority;
+
+        if (statusMatch && priorityMatch) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+
+    // Filter by status
+    statusButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        currentStatusFilter = this.getAttribute("data-status");
+        filterTable();
+      });
+    });
+
+    // Filter by priority
+    priorityButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        currentPriorityFilter = this.getAttribute("data-priority");
+        filterTable();
+      });
+    });
+  });
+</script>
